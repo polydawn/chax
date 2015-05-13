@@ -1,0 +1,9 @@
+[submodule ".gopath/src/github.com/go-gl/gl"]
+	path = .gopath/src/github.com/go-gl/gl
+	url = https://github.com/go-gl/gl.git
+[submodule ".gopath/src/github.com/go-gl/glfw"]
+	path = .gopath/src/github.com/go-gl/glfw
+	url = https://github.com/go-gl/glfw.git
+[submodule ".gopath/src/code.google.com/p/freetype-go"]
+	path = .gopath/src/code.google.com/p/freetype-go
+	url = https://github.com/polydawn-ports/freetype-go.git

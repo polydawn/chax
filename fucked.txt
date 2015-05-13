@@ -1,0 +1,14 @@
+
+### Please stop:
+
+```
+fatal error: GL/glx.h: No such file or directory
+#include <GL/gl.h>
+compilation terminated
+```
+
+Embed the fucking headers.  My users aren't going to recompile per host; that means my dev environment shouldn't have per-host reference either.  Ever.
+
+... Then again, glfw is embedded in here, and we appear to be recompiling it, and it's importing big swaths of standard lib stuff, so... my hands are raised in supplication; I give up.
+
+
