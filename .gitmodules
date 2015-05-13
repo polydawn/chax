@@ -7,3 +7,6 @@
 [submodule ".gopath/src/code.google.com/p/freetype-go"]
 	path = .gopath/src/code.google.com/p/freetype-go
 	url = https://github.com/polydawn-ports/freetype-go.git
+[submodule ".gopath/src/github.com/google/gxui"]
+	path = .gopath/src/github.com/google/gxui
+	url = https://github.com/google/gxui.git

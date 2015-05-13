@@ -93,11 +93,15 @@ else
 		done
 		rm -f "$coverFile"
 		;;
+	demo-gxui)
+		# nothing special about this, just highlighting that these exist.
+		go install "github.com/google/gxui/samples/..."
+		;;
 	clean)
 		rm -rf "$GOPATH/bin" "$GOPATH/pkg" "$GOPATH/tmp"
 		;;
 	*)
-		echo "Usage: $0 {init|test|install|fmt|doc|cover|clean}" 1>&2;
+		echo "Usage: $0 {init|test|install|fmt|doc|cover|demo-gxui|clean}" 1>&2;
 		exit 1
 	;;
 	esac
