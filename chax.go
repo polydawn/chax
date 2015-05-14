@@ -5,9 +5,12 @@ import (
 	"net"
 	"time"
 
+	"polydawn.net/chax/chaxui"
+
 	"github.com/agl/xmpp"
 	"github.com/google/gxui"
 	"github.com/google/gxui/drivers/gl"
+	"github.com/google/gxui/math"
 	"github.com/google/gxui/themes/dark"
 	"github.com/inconshreveable/log15"
 )
@@ -23,8 +26,23 @@ func appMain(driver gxui.Driver) {
 
 	window := theme.CreateWindow(800, 600, "Hallo mundai")
 	window.OnClose(driver.Terminate)
+	window.SetPadding(math.Spacing{L: 10, T: 10, R: 10, B: 10})
 
-	hello()
+	splitter := theme.CreateSplitterLayout()
+	splitter.SetOrientation(gxui.Horizontal)
+	window.AddChild(splitter)
+
+	idkPlaceholder := theme.CreateTextBox()
+	splitter.AddChild(idkPlaceholder)
+
+	consoleLogCtrl := &chaxui.LinesAdapter{}
+	consoleLog := theme.CreateList()
+	consoleLog.SetAdapter(consoleLogCtrl)
+	splitter.AddChild(consoleLog)
+
+	consoleLogCtrl.Set([]string{"hai", "hay"})
+
+	//hello()
 }
 
 func hello() {
