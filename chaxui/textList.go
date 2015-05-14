@@ -1,6 +1,8 @@
 package chaxui
 
 import (
+	"fmt"
+
 	"github.com/google/gxui"
 	"github.com/google/gxui/math"
 )
@@ -17,12 +19,17 @@ func (a *LinesAdapter) Set(lines []string) {
 	a.DataChanged()
 }
 
+func (a *LinesAdapter) Append(lines ...string) {
+	a.lines = append(a.lines, lines...)
+	a.DataChanged()
+}
+
 func (a *LinesAdapter) Count() int {
 	return len(a.lines)
 }
 
 func (a *LinesAdapter) ItemAt(index int) gxui.AdapterItem {
-	return a.lines[index]
+	return fmt.Sprintf("%d:%s", index, a.lines[index]) // gxui has Feelings about repeat elements
 }
 
 func (a *LinesAdapter) ItemIndex(item gxui.AdapterItem) int {

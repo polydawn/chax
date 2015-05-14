@@ -40,7 +40,13 @@ func appMain(driver gxui.Driver) {
 	consoleLog.SetAdapter(consoleLogCtrl)
 	splitter.AddChild(consoleLog)
 
-	consoleLogCtrl.Set([]string{"hai", "hay"})
+	consoleLogCtrl.Append("hai", "hay")
+	go func() {
+		for {
+			<-time.After(time.Second)
+			consoleLogCtrl.Append("hoi")
+		}
+	}()
 
 	//hello()
 }
