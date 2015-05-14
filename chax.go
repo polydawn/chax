@@ -18,32 +18,16 @@ func main() {
 
 var Log = log15.New()
 
-type Account struct {
-	Username string
-	Domain   string
-	Password string
-}
-
-type ServerDesc struct {
-	Host string
-	Port uint16
-}
-
-func Resolve(domain string) (sd ServerDesc) {
-	var err error
-	sd.Host, sd.Port, err = xmpp.Resolve(domain)
-	if err != nil {
-		panic("Failed to resolve XMPP server: " + err.Error())
-	}
-	return
-}
-
 func appMain(driver gxui.Driver) {
 	theme := dark.CreateTheme(driver)
 
 	window := theme.CreateWindow(800, 600, "Hallo mundai")
 	window.OnClose(driver.Terminate)
 
+	hello()
+}
+
+func hello() {
 	account := Account{
 		Username: "testpilot",
 		Domain:   "crypt.mn",
@@ -59,7 +43,7 @@ func appMain(driver gxui.Driver) {
 		TrustedAddress: true, // current test account has cert for 'www.xmpp.pro', which is not our account domain; handle better later
 		//ServerCertificateSHA256: certSHA256, // pinning todo
 		TLSConfig: TLSConfig,
-		SkipTLS: true, // sigh, current test server is EOF'ing me.  presumably suite mismatches; no indications; libpurple is fine with it.
+		SkipTLS:   true, // sigh, current test server is EOF'ing me.  presumably suite mismatches; no indications; libpurple is fine with it.
 	}
 
 	Log.Info("connecting", "account", account, "server", serverDesc)
@@ -82,6 +66,10 @@ func appMain(driver gxui.Driver) {
 	//		panic("Failed to request roster: "+err.Error())
 	//		return
 	//	}
+
+	conn.SignalPresence("")
+
+	time.Sleep(5 * time.Minute)
 
 	conn.SignalPresence("")
 }
