@@ -66,6 +66,15 @@ else
 	install)
 		go install "$pkg"
 		;;
+	run)
+		go install "$pkg" &&
+		$GOPATH/bin/chax && {
+			echo -e "\n\E[1;32mchax ran successfully.\E[0;m"
+		} || {
+			echo -e "\n\E[1;41mchax exited with code $?!\E[0;m"
+			exit 19
+		}
+		;;
 	fmt)
 		go fmt "$SUBSECTION"
 		;;

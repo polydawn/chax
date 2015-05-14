@@ -10,3 +10,12 @@
 [submodule ".gopath/src/github.com/google/gxui"]
 	path = .gopath/src/github.com/google/gxui
 	url = https://github.com/google/gxui.git
+[submodule ".gopath/src/github.com/agl/xmpp"]
+	path = .gopath/src/github.com/agl/xmpp
+	url = https://github.com/agl/xmpp.git
+[submodule ".gopath/src/github.com/inconshreveable/log15"]
+	path = .gopath/src/github.com/inconshreveable/log15
+	url = https://github.com/inconshreveable/log15.git
+[submodule ".gopath/src/github.com/mattn/go-colorable"]
+	path = .gopath/src/github.com/mattn/go-colorable
+	url = https://github.com/mattn/go-colorable.git
