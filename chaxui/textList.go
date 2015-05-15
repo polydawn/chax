@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/google/gxui"
+	"github.com/google/gxui/gxfont"
 	"github.com/google/gxui/math"
 )
 
@@ -46,6 +47,8 @@ func (a *LinesAdapter) Create(theme gxui.Theme, index int) gxui.Control {
 	line := a.lines[index]
 	label := theme.CreateLabel()
 	label.SetText(line)
+	font, _ := theme.Driver().CreateFont(gxfont.Monospace, 13)
+	label.SetFont(font)
 	return label
 }
 
