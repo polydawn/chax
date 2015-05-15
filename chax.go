@@ -50,12 +50,22 @@ func appMain(driver gxui.Driver) {
 }
 
 func hello() {
+	// this one's fun!  it doesn't respond to... any... of my IQs, apparently.
 	account := Account{
 		Username: "testpilot",
 		Domain:   "crypt.mn",
 		Password: "asdf",
 	}
 	serverDesc := Resolve("crypt.mn")
+
+	// this one's fun!  "PLAIN authentication is not an option"
+	//	account := Account{
+	//		Username: "testpilot",
+	//		Domain:   "im.koderoot.net",
+	//		Password: "asdf",
+	//	}
+	//	serverDesc := Resolve("im.koderoot.net")
+
 	addr := fmt.Sprintf("%s:%d", serverDesc.Host, serverDesc.Port)
 
 	xmppConfig := &xmpp.Config{
@@ -71,7 +81,7 @@ func hello() {
 	Log.Info("connecting", "account", account, "server", serverDesc)
 
 	// do our own dial, because the default timeouts are... insane.  like, minutes.  plural.
-	sock, err := net.DialTimeout("tcp", addr, time.Second)
+	sock, err := net.DialTimeout("tcp", addr, 2*time.Second)
 	if err != nil {
 		panic("Failed to connect to XMPP server: " + err.Error())
 	}
@@ -86,18 +96,30 @@ func hello() {
 	rosterReply, _, err := conn.RequestRoster()
 	if err != nil {
 		panic("Failed to request roster: " + err.Error())
-		return
 	}
 
 	heartbeatTicker := time.NewTicker(5 * time.Second)
+
+	replyChan, _, err := conn.SendIQ(account.Username, "get", xmpp.VersionQuery{})
+	if err != nil {
+		panic("Error sending version request: " + err.Error())
+	}
+	awaitVersionReply(replyChan, account.Username)
 
 	conn.SignalPresence("")
 	for {
 		select {
 		case <-heartbeatTicker.C:
 			conn.SignalPresence("keks")
-		case roster := <-rosterReply:
-			Log.Info("roster", roster)
+		case rosterStanza, ok := <-rosterReply:
+			if !ok {
+				panic("Failed to read roster: " + err.Error())
+			}
+			var roster []xmpp.RosterEntry
+			if roster, err = xmpp.ParseRoster(rosterStanza); err != nil {
+				panic("Failed to parse roster: " + err.Error())
+			}
+			Log.Info("Roster received", "roster", roster)
 		}
 	}
 }
