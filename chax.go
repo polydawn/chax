@@ -41,14 +41,6 @@ func appMain(driver gxui.Driver) {
 	splitter.AddChild(consoleLog)
 	splitter.SetChildWeight(consoleLog, 2)
 
-	consoleLogCtrl.Append("hai", "hay")
-	//	go func() {
-	//		for i := 0; i < 100000; i++ {
-	//			<-time.After(1 * time.Millisecond)
-	//			consoleLogCtrl.Append(fmt.Sprintf("hoi  %d", i))
-	//		}
-	//	}()
-
 	Log.SetHandler(log15.MultiHandler(
 		log15.StdoutHandler,
 		ListDumpHandler(driver, consoleLogCtrl, log15.LogfmtFormat()),
