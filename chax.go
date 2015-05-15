@@ -15,11 +15,11 @@ import (
 	"github.com/inconshreveable/log15"
 )
 
+var Log = log15.New()
+
 func main() {
 	gl.StartDriver(appMain)
 }
-
-var Log = log15.New()
 
 func appMain(driver gxui.Driver) {
 	theme := dark.CreateTheme(driver)
@@ -41,14 +41,19 @@ func appMain(driver gxui.Driver) {
 	splitter.AddChild(consoleLog)
 
 	consoleLogCtrl.Append("hai", "hay")
-	go func() {
-		for {
-			<-time.After(time.Second)
-			consoleLogCtrl.Append("hoi")
-		}
-	}()
+	//	go func() {
+	//		for i := 0; i < 100000; i++ {
+	//			<-time.After(1 * time.Millisecond)
+	//			consoleLogCtrl.Append(fmt.Sprintf("hoi  %d", i))
+	//		}
+	//	}()
 
-	//hello()
+	Log.SetHandler(log15.MultiHandler(
+		log15.StdoutHandler,
+		ListDumpHandler(driver, consoleLogCtrl, log15.LogfmtFormat()),
+	))
+
+	go hello()
 }
 
 func hello() {
@@ -61,9 +66,9 @@ func hello() {
 	addr := fmt.Sprintf("%s:%d", serverDesc.Host, serverDesc.Port)
 
 	xmppConfig := &xmpp.Config{
-		InLog:          LogWriter{log15.Root(), log15.LvlDebug, " <- RECV <-"},
-		OutLog:         LogWriter{log15.Root(), log15.LvlDebug, " -> SENT ->"},
-		Log:            LogWriter{log15.Root(), log15.LvlDebug, " :: NOTE ::"},
+		InLog:          LogWriter{Log, log15.LvlDebug, " <- RECV <-"},
+		OutLog:         LogWriter{Log, log15.LvlDebug, " -> SENT ->"},
+		Log:            LogWriter{Log, log15.LvlDebug, " :: NOTE ::"},
 		TrustedAddress: true, // current test account has cert for 'www.xmpp.pro', which is not our account domain; handle better later
 		//ServerCertificateSHA256: certSHA256, // pinning todo
 		TLSConfig: TLSConfig,

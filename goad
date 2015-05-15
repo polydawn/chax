@@ -67,7 +67,7 @@ else
 		go install "$pkg"
 		;;
 	run)
-		go install "$pkg" &&
+		go install -race "$pkg" &&
 		$GOPATH/bin/chax && {
 			echo -e "\n\E[1;32mchax ran successfully.\E[0;m"
 		} || {
