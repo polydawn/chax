@@ -91,15 +91,21 @@ func hello() {
 		panic("Failed to connect to XMPP server: " + err.Error())
 	}
 
-	//	rosterReply, _, err := conn.RequestRoster()
-	//	if err != nil {
-	//		panic("Failed to request roster: "+err.Error())
-	//		return
-	//	}
+	rosterReply, _, err := conn.RequestRoster()
+	if err != nil {
+		panic("Failed to request roster: " + err.Error())
+		return
+	}
+
+	heartbeatTicker := time.NewTicker(5 * time.Second)
 
 	conn.SignalPresence("")
-
-	time.Sleep(5 * time.Minute)
-
-	conn.SignalPresence("")
+	for {
+		select {
+		case <-heartbeatTicker.C:
+			conn.SignalPresence("keks")
+		case roster := <-rosterReply:
+			Log.Info("roster", roster)
+		}
+	}
 }
