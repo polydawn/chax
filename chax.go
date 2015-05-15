@@ -39,6 +39,7 @@ func appMain(driver gxui.Driver) {
 	consoleLog := theme.CreateList()
 	consoleLog.SetAdapter(consoleLogCtrl)
 	splitter.AddChild(consoleLog)
+	splitter.SetChildWeight(consoleLog, 2)
 
 	consoleLogCtrl.Append("hai", "hay")
 	//	go func() {
