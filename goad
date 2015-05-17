@@ -104,7 +104,13 @@ else
 		;;
 	demo-gxui)
 		# nothing special about this, just highlighting that these exist.
-		go install "github.com/google/gxui/samples/..."
+		go install "github.com/google/gxui/samples/..." &&
+		"$GOPATH/bin/polygon" && {
+			echo -e "\n\E[1;32mgxui polygon demo ran successfully.\E[0;m"
+		} || {
+			echo -e "\n\E[1;41mgxui polygon demo exited with code $?!\E[0;m"
+			exit 19
+		}
 		;;
 	clean)
 		rm -rf "$GOPATH/bin" "$GOPATH/pkg" "$GOPATH/tmp"
