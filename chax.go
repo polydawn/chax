@@ -93,20 +93,27 @@ func hello() {
 		panic("Failed to connect to XMPP server: " + err.Error())
 	}
 
+	// announce that we're alive
+	conn.SignalPresence("")
+
+	// talk to ourselves
+	// there's no such thing as message acknowledgement, apparently
+	conn.Send(account.FQAN(), string("hallomsg"))
+
+	// fire an IQ.  we'll try to collect on it later.
 	rosterReply, _, err := conn.RequestRoster()
 	if err != nil {
 		panic("Failed to request roster: " + err.Error())
 	}
 
+	// fire an IQ.  wait for it, bceause in theory there's no earthy reason you wouldn't get a version response immediately, right?
+	//	replyChan, _, err := conn.SendIQ(account.FQAN(), "get", xmpp.VersionQuery{})
+	//	if err != nil {
+	//		panic("Error sending version request: " + err.Error())
+	//	}
+	//	awaitVersionReply(replyChan, account.FQAN())
+
 	heartbeatTicker := time.NewTicker(5 * time.Second)
-
-	replyChan, _, err := conn.SendIQ(account.FQAN(), "get", xmpp.VersionQuery{})
-	if err != nil {
-		panic("Error sending version request: " + err.Error())
-	}
-	awaitVersionReply(replyChan, account.FQAN())
-
-	conn.SignalPresence("")
 	for {
 		select {
 		case <-heartbeatTicker.C:
