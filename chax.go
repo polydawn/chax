@@ -51,6 +51,18 @@ func hello() {
 
 func testpartner() (protocol.Account, protocol.ServerDesc) {
 	switch 1 {
+	case 0:
+		// requires test server on localhost.
+		// run `sudo scripts/prosody-install.sh && prosody-launch.sh`
+		return protocol.Account{
+				Username: "testpilot",
+				Domain:   "localhost",
+				Password: "asdf",
+			},
+			protocol.ServerDesc{
+				Host: "localhost",
+				Port: 5222,
+			}
 	case 1:
 		// this one's fun!  it doesn't respond to... any... of my IQs, apparently.
 		return protocol.Account{
