@@ -21,30 +21,18 @@ func main() {
 	gl.StartDriver(appMain)
 }
 
+func getTitle() string {
+	// TODO(lfaraone): include username
+	return "Chax"
+}
 func appMain(driver gxui.Driver) {
 	theme := dark.CreateTheme(driver)
 
-	window := theme.CreateWindow(800, 600, "Hallo mundai")
+	window := theme.CreateWindow(800, 600, getTitle())
 	window.OnClose(driver.Terminate)
 	window.SetPadding(math.Spacing{L: 10, T: 10, R: 10, B: 10})
 
-	splitter := theme.CreateSplitterLayout()
-	splitter.SetOrientation(gxui.Horizontal)
-	window.AddChild(splitter)
-
-	idkPlaceholder := theme.CreateTextBox()
-	splitter.AddChild(idkPlaceholder)
-
-	consoleLogCtrl := &chaxui.LinesAdapter{}
-	consoleLog := theme.CreateList()
-	consoleLog.SetAdapter(consoleLogCtrl)
-	splitter.AddChild(consoleLog)
-	splitter.SetChildWeight(consoleLog, 2)
-
-	Log.SetHandler(log15.MultiHandler(
-		log15.StdoutHandler,
-		ListDumpHandler(driver, consoleLogCtrl, log15.LogfmtFormat()),
-	))
+	window.AddChild(chaxui.NewChatWindowContents(theme))
 
 	go hello()
 }
