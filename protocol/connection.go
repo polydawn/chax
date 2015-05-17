@@ -4,5 +4,5 @@ package protocol
 // protocols in the backend (like xmpp's IQs).
 
 type Conn interface {
-	Send(recepient Account, body []byte) Message
+	Send(recipient Account, body []byte) Message
 }
