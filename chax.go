@@ -35,21 +35,7 @@ func appMain(driver gxui.Driver) {
 }
 
 func hello() {
-	// this one's fun!  it doesn't respond to... any... of my IQs, apparently.
-	account := protocol.Account{
-		Username: "testpilot",
-		Domain:   "crypt.mn",
-		Password: "asdf",
-	}
-	serverDesc := xmpp.ResolveServer("crypt.mn")
-
-	// this one's fun!  "PLAIN authentication is not an option"
-	//	account := protocol.Account{
-	//		Username: "testpilot",
-	//		Domain:   "im.koderoot.net",
-	//		Password: "asdf",
-	//	}
-	//	serverDesc := xmpp.ResolveServer("im.koderoot.net")
+	account, serverDesc := testpartner()
 
 	Log.Info("connecting", "account", account, "server", serverDesc)
 	conn := xmpp.Dial(serverDesc, account, Log)
@@ -60,4 +46,27 @@ func hello() {
 	Log.Info("sending hello", "account", account, "server", serverDesc)
 	conn.Send(account, []byte("hallomsg"))
 	Log.Info("hello sent!", "account", account, "server", serverDesc)
+}
+
+func testpartner() (protocol.Account, protocol.ServerDesc) {
+	switch 1 {
+	case 1:
+		// this one's fun!  it doesn't respond to... any... of my IQs, apparently.
+		return protocol.Account{
+				Username: "testpilot",
+				Domain:   "crypt.mn",
+				Password: "asdf",
+			},
+			xmpp.ResolveServer("crypt.mn")
+	case 2:
+		// this one's fun!  "PLAIN authentication is not an option"
+		return protocol.Account{
+				Username: "testpilot",
+				Domain:   "im.koderoot.net",
+				Password: "asdf",
+			},
+			xmpp.ResolveServer("im.koderoot.net")
+	default:
+		panic("silly")
+	}
 }
