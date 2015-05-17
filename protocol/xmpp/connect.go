@@ -41,9 +41,9 @@ func Dial(server protocol.ServerDesc, account protocol.Account, Log log15.Logger
 
 	// shrinkwrap for sale and launch actor
 	conn := &Conn{
-		raw:     xmppConn,
-		server:  server,
-		account: account,
+		raw:         xmppConn,
+		server:      server,
+		account:     account,
 		commandChan: make(chan interface{}),
 	}
 	go conn.run()
