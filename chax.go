@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"net"
 	"time"
 
 	"polydawn.net/chax/chaxui"
@@ -56,32 +54,9 @@ func hello() {
 	//	}
 	//	serverDesc := xmpp2.ResolveServer("im.koderoot.net")
 
-	addr := fmt.Sprintf("%s:%d", serverDesc.Host, serverDesc.Port)
-
-	xmppConfig := &xmpp.Config{
-		InLog:          LogWriter{Log, log15.LvlDebug, " <- RECV <-"},
-		OutLog:         LogWriter{Log, log15.LvlDebug, " -> SENT ->"},
-		Log:            LogWriter{Log, log15.LvlDebug, " :: NOTE ::"},
-		TrustedAddress: true, // current test account has cert for 'www.xmpp.pro', which is not our account domain; handle better later
-		//ServerCertificateSHA256: certSHA256, // pinning todo
-		TLSConfig: TLSConfig,
-		SkipTLS:   true, // sigh, current test server is EOF'ing me.  presumably suite mismatches; no indications; libpurple is fine with it.
-	}
-
 	Log.Info("connecting", "account", account, "server", serverDesc)
 
-	// do our own dial, because the default timeouts are... insane.  like, minutes.  plural.
-	sock, err := net.DialTimeout("tcp", addr, 2*time.Second)
-	if err != nil {
-		panic("Failed to connect to XMPP server: " + err.Error())
-	}
-	xmppConfig.Conn = sock
-
-	// shake
-	conn, err := xmpp.Dial(addr, account.Username, account.Domain, account.Password, xmppConfig)
-	if err != nil {
-		panic("Failed to connect to XMPP server: " + err.Error())
-	}
+	conn := xmpp2.Dial(serverDesc, account, Log)
 
 	// announce that we're alive
 	conn.SignalPresence("")

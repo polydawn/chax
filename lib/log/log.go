@@ -1,23 +1,20 @@
-package main
+package log
 
 import (
 	"io"
 
-	"polydawn.net/chax/chaxui"
-
-	"github.com/google/gxui"
 	"github.com/inconshreveable/log15"
 )
 
-var _ io.Writer = LogWriter{}
+var _ io.Writer = Writer{}
 
-type LogWriter struct {
+type Writer struct {
 	Log   log15.Logger
 	Level log15.Lvl
 	Msg   string
 }
 
-func (lw LogWriter) Write(msg []byte) (int, error) {
+func (lw Writer) Write(msg []byte) (int, error) {
 	// goddamnit, expose your fucking `write` method
 	switch lw.Level {
 	case log15.LvlDebug:
@@ -32,13 +29,4 @@ func (lw LogWriter) Write(msg []byte) (int, error) {
 		lw.Log.Crit(lw.Msg, "chunk", string(msg))
 	}
 	return len(msg), nil
-}
-
-func ListDumpHandler(driver gxui.Driver, listCtrl *chaxui.LinesAdapter, fmtr log15.Format) log15.Handler {
-	return log15.FuncHandler(func(r *log15.Record) error {
-		driver.Call(func() {
-			listCtrl.Append(string(fmtr.Format(r)))
-		})
-		return nil
-	})
 }
