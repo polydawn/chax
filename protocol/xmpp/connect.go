@@ -14,7 +14,7 @@ import (
 	"github.com/inconshreveable/log15"
 )
 
-func Dial(server protocol.ServerDesc, account protocol.Account, Log log15.Logger) *xmpp.Conn {
+func Dial(server protocol.ServerDesc, account protocol.Account, Log log15.Logger) protocol.Conn {
 	xmppConfig := &xmpp.Config{
 		InLog:          log.Writer{Log, log15.LvlDebug, " <- RECV <-"},
 		OutLog:         log.Writer{Log, log15.LvlDebug, " -> SENT ->"},
@@ -34,10 +34,19 @@ func Dial(server protocol.ServerDesc, account protocol.Account, Log log15.Logger
 	xmppConfig.Conn = sock
 
 	// shake
-	conn, err := xmpp.Dial(addr, account.Username, account.Domain, account.Password, xmppConfig)
+	xmppConn, err := xmpp.Dial(addr, account.Username, account.Domain, account.Password, xmppConfig)
 	if err != nil {
 		panic("Failed to connect to XMPP server: " + err.Error())
 	}
+
+	// shrinkwrap for sale and launch actor
+	conn := &Conn{
+		raw:     xmppConn,
+		server:  server,
+		account: account,
+		commandChan: make(chan interface{}),
+	}
+	go conn.run()
 	return conn
 }
 
