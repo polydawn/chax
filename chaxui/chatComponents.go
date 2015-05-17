@@ -4,17 +4,25 @@ import (
 	"github.com/google/gxui"
 )
 
-func NewChatWindowContents(theme gxui.Theme) gxui.Control {
+type Ui struct {
+	conversationListCtrl, discussionHistoryCtrl *LinesAdapter
+	composeBox                                  gxui.Control
+	BaseLayout                                  gxui.SplitterLayout
+}
+
+func New(theme gxui.Theme) Ui {
+	ui := Ui{}
+
 	// Overall window splitter
-	splitter := theme.CreateSplitterLayout()
-	splitter.SetOrientation(gxui.Horizontal)
+	ui.BaseLayout = theme.CreateSplitterLayout()
+	ui.BaseLayout.SetOrientation(gxui.Horizontal)
 
 	// LHS contact/chat list
-	conversationListCtrl := &LinesAdapter{}
+	ui.conversationListCtrl = &LinesAdapter{}
 	conversationList := theme.CreateList()
-	conversationList.SetAdapter(conversationListCtrl)
+	conversationList.SetAdapter(ui.conversationListCtrl)
 
-	splitter.AddChild(conversationList)
+	ui.BaseLayout.AddChild(conversationList)
 
 	// RHS splitter for the conversation view
 	discussionContainer := theme.CreateSplitterLayout()
@@ -33,8 +41,8 @@ func NewChatWindowContents(theme gxui.Theme) gxui.Control {
 	discussionContainer.AddChild(composeBox)
 	discussionContainer.SetChildWeight(discussionHistory, 6)
 
-	splitter.AddChild(discussionContainer)
-	splitter.SetChildWeight(discussionContainer, 2)
+	ui.BaseLayout.AddChild(discussionContainer)
+	ui.BaseLayout.SetChildWeight(discussionContainer, 2)
 
-	return splitter
+	return ui
 }

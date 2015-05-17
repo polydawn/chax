@@ -29,7 +29,8 @@ func appMain(driver gxui.Driver) {
 	window.OnClose(driver.Terminate)
 	window.SetPadding(math.Spacing{L: 10, T: 10, R: 10, B: 10})
 
-	window.AddChild(chaxui.NewChatWindowContents(theme))
+	ui := chaxui.New(theme)
+	window.AddChild(ui.BaseLayout)
 
 	go hello()
 }
