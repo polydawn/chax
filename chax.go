@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"polydawn.net/chax/chaxui"
+	"polydawn.net/chax/protocol"
+	xmpp2 "polydawn.net/chax/protocol/xmpp" // todo get agl's code outta sight of main and mostly hidden behind protocol agnosticness
 
 	"github.com/agl/xmpp"
 	"github.com/google/gxui"
@@ -39,20 +41,20 @@ func appMain(driver gxui.Driver) {
 
 func hello() {
 	// this one's fun!  it doesn't respond to... any... of my IQs, apparently.
-	account := Account{
+	account := protocol.Account{
 		Username: "testpilot",
 		Domain:   "crypt.mn",
 		Password: "asdf",
 	}
-	serverDesc := Resolve("crypt.mn")
+	serverDesc := xmpp2.ResolveServer("crypt.mn")
 
 	// this one's fun!  "PLAIN authentication is not an option"
-	//	account := Account{
+	//	account := protocol.Account{
 	//		Username: "testpilot",
 	//		Domain:   "im.koderoot.net",
 	//		Password: "asdf",
 	//	}
-	//	serverDesc := Resolve("im.koderoot.net")
+	//	serverDesc := xmpp2.ResolveServer("im.koderoot.net")
 
 	addr := fmt.Sprintf("%s:%d", serverDesc.Host, serverDesc.Port)
 

@@ -8,30 +8,6 @@ import (
 	"github.com/agl/xmpp"
 )
 
-type Account struct {
-	Username string
-	Domain   string
-	Password string
-}
-
-func (a Account) FQAN() string {
-	return fmt.Sprintf("%s@%s", a.Username, a.Domain)
-}
-
-type ServerDesc struct {
-	Host string
-	Port uint16
-}
-
-func Resolve(domain string) (sd ServerDesc) {
-	var err error
-	sd.Host, sd.Port, err = xmpp.Resolve(domain)
-	if err != nil {
-		panic("Failed to resolve XMPP server: " + err.Error())
-	}
-	return
-}
-
 func awaitVersionReply(ch <-chan xmpp.Stanza, user string) {
 	stanza, ok := <-ch
 	if !ok {
