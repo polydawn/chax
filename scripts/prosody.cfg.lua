@@ -16,6 +16,8 @@ modules_enabled = {
 	"register"; -- Allow users to register on this server using a client and change passwords
 };
 
+log = {{to = "console", levels = { min =  "debug" }}}
+
 allow_registration = false;
 
 -- ssl = {
