@@ -14,6 +14,10 @@ type Account struct {
 	Password string
 }
 
+func (a Account) FQAN() string {
+	return fmt.Sprintf("%s@%s", a.Username, a.Domain)
+}
+
 type ServerDesc struct {
 	Host string
 	Port uint16

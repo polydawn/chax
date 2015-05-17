@@ -100,11 +100,11 @@ func hello() {
 
 	heartbeatTicker := time.NewTicker(5 * time.Second)
 
-	replyChan, _, err := conn.SendIQ(account.Username, "get", xmpp.VersionQuery{})
+	replyChan, _, err := conn.SendIQ(account.FQAN(), "get", xmpp.VersionQuery{})
 	if err != nil {
 		panic("Error sending version request: " + err.Error())
 	}
-	awaitVersionReply(replyChan, account.Username)
+	awaitVersionReply(replyChan, account.FQAN())
 
 	conn.SignalPresence("")
 	for {
