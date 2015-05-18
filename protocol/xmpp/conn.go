@@ -23,11 +23,29 @@ type Conn struct {
 	Actor main method.  Call me once, in a goroutine you don't expect to return.
 */
 func (conn *Conn) run() {
+	// spawn another worker for slurping messages from the wire,
+	//  so that we can just select on whole messages in the main loop.
+	stanzaChan := make(chan xmpp.Stanza)
+	go func() {
+		defer close(stanzaChan)
+		for {
+			stanza, err := conn.raw.Next()
+			if err != nil {
+				panic(err.Error())
+			}
+			stanzaChan <- stanza
+		}
+	}()
+	// expect to do heartbeats and maintenance periodically
 	heartbeatTicker := time.NewTicker(5 * time.Second)
+	// main loop
 	for {
 		select {
 		case <-heartbeatTicker.C:
 			conn.raw.SignalPresence("")
+		case rawStanza := <-stanzaChan:
+			// TODO ... many branches of processing
+			conn.log.Debug("unhandled stanza", "stanza", rawStanza)
 		case cmd := <-conn.commandChan:
 			switch cmd := cmd.(type) {
 			case func():
