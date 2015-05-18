@@ -6,6 +6,7 @@ import (
 	"polydawn.net/chax/protocol"
 
 	"github.com/agl/xmpp"
+	"github.com/inconshreveable/log15"
 )
 
 var _ protocol.Conn = &Conn{}
@@ -14,6 +15,7 @@ type Conn struct {
 	raw         *xmpp.Conn // agl's connection type
 	server      protocol.ServerDesc
 	account     protocol.Account
+	log         log15.Logger
 	commandChan chan interface{}
 }
 

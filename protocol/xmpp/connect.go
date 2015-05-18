@@ -15,6 +15,8 @@ import (
 )
 
 func Dial(server protocol.ServerDesc, account protocol.Account, Log log15.Logger) protocol.Conn {
+	Log = Log.New("account", account, "server", server) // TODO connection guids or something
+
 	xmppConfig := &xmpp.Config{
 		InLog:          log.Writer{Log, log15.LvlDebug, " <- RECV <-"},
 		OutLog:         log.Writer{Log, log15.LvlDebug, " -> SENT ->"},
@@ -27,6 +29,7 @@ func Dial(server protocol.ServerDesc, account protocol.Account, Log log15.Logger
 
 	// do our own dial, because the default timeouts are... insane.  like, minutes.  plural.
 	addr := server.Addr()
+	Log.Info("connecting")
 	sock, err := net.DialTimeout("tcp", addr, 2*time.Second)
 	if err != nil {
 		panic("Failed to connect to XMPP server: " + err.Error())
@@ -38,12 +41,14 @@ func Dial(server protocol.ServerDesc, account protocol.Account, Log log15.Logger
 	if err != nil {
 		panic("Failed to connect to XMPP server: " + err.Error())
 	}
+	Log.Info("connected!")
 
 	// shrinkwrap for sale and launch actor
 	conn := &Conn{
 		raw:         xmppConn,
 		server:      server,
 		account:     account,
+		log:         Log,
 		commandChan: make(chan interface{}),
 	}
 	go conn.run()

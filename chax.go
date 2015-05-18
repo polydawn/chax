@@ -38,15 +38,11 @@ func appMain(driver gxui.Driver) {
 func hello() {
 	account, serverDesc := testpartner()
 
-	Log.Info("connecting", "account", account, "server", serverDesc)
 	conn := xmpp.Dial(serverDesc, account, Log)
-	Log.Info("connected!", "account", account, "server", serverDesc)
 
 	// talk to ourselves
 	// there's no such thing as message acknowledgement, apparently
-	Log.Info("sending hello", "account", account, "server", serverDesc)
 	conn.Send(account, []byte("hallomsg"))
-	Log.Info("hello sent!", "account", account, "server", serverDesc)
 }
 
 func testpartner() (protocol.Account, protocol.ServerDesc) {
