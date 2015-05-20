@@ -52,30 +52,9 @@ func (conn *Conn) run() {
 				conn.log.Debug("unhandled presence stanza", "stanza", stanza)
 			case *xmpp.ClientIQ:
 				conn.log.Debug("unhandled IQ request stanza", "stanza", stanza)
-				if stanza.Type != "get" && stanza.Type != "set" {
-					continue
-				}
-				// TODO control the spiraling inanity of this parsing
-				// reply := s.processIQ(stanza)
-				var reply interface{}
-				// TODO also this does not seem to me like it should necessarily be done while blocking the main event loop; review
-				if reply == nil {
-					reply = xmpp.ErrorReply{
-						Type:  "cancel",
-						Error: xmpp.ErrorBadRequest{},
-					}
-				}
-				if err := conn.raw.SendIQReply(stanza.From, "result", stanza.Id, reply); err != nil {
-					conn.log.Warn("failed to send IQ message", "reply", reply, "error", err)
-				}
+				conn.dispatchClientIQ(stanza)
 			case *xmpp.StreamError:
-				var text string
-				if len(stanza.Text) > 0 {
-					text = stanza.Text
-				} else {
-					text = fmt.Sprintf("%s", stanza.Any)
-				}
-				conn.log.Warn("error from server", "stanza", text)
+				conn.log.Warn("error from server", "message", stringifyStreamError(stanza))
 			default:
 				conn.log.Warn("unrecognized stanza", "name", rawStanza.Name, "value", rawStanza.Value)
 			}
@@ -86,4 +65,15 @@ func (conn *Conn) run() {
 			}
 		}
 	}
+}
+
+/*
+	Stringify StreamError, preferring the human-readable text if any, and
+	falling back to the xml blob if nothing better is around.
+*/
+func stringifyStreamError(stanza *xmpp.StreamError) string {
+	if len(stanza.Text) > 0 {
+		return stanza.Text
+	}
+	return fmt.Sprintf("%s", stanza.Any)
 }
