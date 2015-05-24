@@ -13,11 +13,13 @@ import (
 var _ protocol.Conn = &Conn{}
 
 type Conn struct {
-	raw         *xmpp.Conn // agl's connection type
-	server      protocol.ServerDesc
-	account     protocol.Account
-	log         log15.Logger
-	commandChan chan interface{}
+	raw           *xmpp.Conn // agl's connection type
+	server        protocol.ServerDesc
+	account       protocol.Account
+	log           log15.Logger
+	commandChan   chan interface{}
+	conversations map[protocol.Account]*conversation
+	incoming      chan protocol.Conversation // buffered.  we dump new conversations here if we have to create them.
 }
 
 /*
@@ -62,9 +64,27 @@ func (conn *Conn) run() {
 			switch cmd := cmd.(type) {
 			case func():
 				cmd()
+			case *newConversationCmd:
+				conv, ok := conn.conversations[cmd.recipient]
+				if !ok {
+					conv = conn.newConversation(cmd.recipient)
+				}
+				cmd.ack <- conv
 			}
 		}
 	}
+}
+
+func (conn *Conn) newConversation(recipient protocol.Account) *conversation {
+	// must be called from the connection's master actor routine
+	conv := &conversation{
+		conn:      conn,
+		recipient: recipient,
+		messages:  make([]protocol.Message, 0, 20),
+		awaiters:  make(chan chan struct{}, 999),
+	}
+	conn.conversations[recipient] = conv
+	return conv
 }
 
 /*

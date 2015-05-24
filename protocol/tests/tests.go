@@ -15,7 +15,8 @@ func CheckMessageBounce(
 		conn2 := conn2dialer()
 
 		Convey("Sending a message from acct1 succeeds", func() {
-			conn1.Send(acct2, []byte("hallo"))
+			conv12 := conn1.StartConversation(acct2)
+			conv12.Send([]byte("hallo"))
 			_ = conn2
 		})
 	})

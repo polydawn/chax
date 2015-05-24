@@ -42,7 +42,8 @@ func hello() {
 
 	// talk to ourselves
 	// there's no such thing as message acknowledgement, apparently
-	conn.Send(account, []byte("hallomsg"))
+	conv := conn.StartConversation(account)
+	conv.Send([]byte("hallomsg"))
 }
 
 func testpartner() (protocol.Account, protocol.ServerDesc) {
