@@ -49,7 +49,7 @@ func (conn *Conn) run() {
 		case rawStanza := <-stanzaChan:
 			switch stanza := rawStanza.Value.(type) {
 			case *xmpp.ClientMessage:
-				conn.log.Debug("unhandled message stanza", "stanza", stanza)
+				conn.dispatchClientMessage(stanza)
 			case *xmpp.ClientPresence:
 				conn.log.Debug("unhandled presence stanza", "stanza", stanza)
 			case *xmpp.ClientIQ:
@@ -75,6 +75,17 @@ func (conn *Conn) run() {
 	}
 }
 
+// get conversation; create if not exists.
+// sends on `incoming` if it had to create
+func (conn *Conn) getConversation(recipient protocol.Account) *conversation {
+	conv, ok := conn.conversations[recipient]
+	if !ok {
+		conv = conn.newConversation(recipient)
+		conn.incoming <- conv
+	}
+	return conv
+}
+
 func (conn *Conn) newConversation(recipient protocol.Account) *conversation {
 	// must be called from the connection's master actor routine
 	conv := &conversation{
@@ -84,6 +95,7 @@ func (conn *Conn) newConversation(recipient protocol.Account) *conversation {
 		awaiters:  make(chan chan struct{}, 999),
 	}
 	conn.conversations[recipient] = conv
+
 	return conv
 }
 

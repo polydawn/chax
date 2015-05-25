@@ -16,8 +16,19 @@ func CheckMessageBounce(
 
 		Convey("Sending a message from acct1 succeeds", func() {
 			conv12 := conn1.StartConversation(acct2)
-			conv12.Send([]byte("hallo"))
-			_ = conn2
+			msgBody := []byte("hallo")
+			conv12.Send(msgBody)
+
+			conv21 := <-conn2.AcceptConversations()
+			ups := conv21.AwaitUpdates() // get this *before* checking or you haz a race
+			msgs := conv21.GetMessages(0, -1)
+			for len(msgs) < 1 {
+				Printf("Snoozen\n")
+				<-ups
+				msgs = conv21.GetMessages(0, -1)
+				ups = conv21.AwaitUpdates()
+			}
+			So(msgs[0].Body, ShouldResemble, msgBody)
 		})
 	})
 }

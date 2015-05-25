@@ -15,7 +15,7 @@ func TestCoreCompliance(t *testing.T) {
 	Convey("Spec Compliance: XMPP Protocol", t, func(c C) {
 		// setup logging
 		lg := log15.New()
-		lg.SetHandler(log.PrinterHandler(c.Print, log15.LogfmtFormat()))
+		lg.SetHandler(log15.LvlFilterHandler(log15.LvlDebug, log.PrinterHandler(c.Print, log15.LogfmtFormat())))
 
 		// set up accounts
 		server := ResolveServer("crypt.mn")

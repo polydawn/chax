@@ -26,6 +26,8 @@ func (conn *Conn) handleClientMessageError(stanza *xmpp.ClientMessage) {
 func (conn *Conn) handleClientMessageRegular(stanza *xmpp.ClientMessage) {
 	msg := conn.parseMessage(stanza)
 	conn.log.Info("MESSAGE", "msg", msg)
+	conv := conn.getConversation(msg.Author)
+	conv.pushMessage(msg) // sync's internally; this is where the conn actor hands off.
 }
 
 func (conn *Conn) parseMessage(stanza *xmpp.ClientMessage) protocol.Message {
