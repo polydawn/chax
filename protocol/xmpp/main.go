@@ -26,6 +26,10 @@ type Conn struct {
 	Actor main method.  Call me once, in a goroutine you don't expect to return.
 */
 func (conn *Conn) run() {
+	// the first thing we have to do upon a new connection is announce presence.
+	//  if you don't announce presence, the server won't consider you online,
+	//   nevermind the tcp dial and the whole auth shake, and won't send you messages.
+	conn.raw.SignalPresence("")
 	// spawn another worker for slurping messages from the wire,
 	//  so that we can just select on whole messages in the main loop.
 	stanzaChan := make(chan xmpp.Stanza)
