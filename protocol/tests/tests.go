@@ -20,13 +20,13 @@ func CheckMessageBounce(
 			conv12.Send(msgBody)
 
 			conv21 := <-conn2.AcceptConversations()
-			ups := conv21.AwaitUpdates() // get this *before* checking or you haz a race
+			ups := conv21.UpdateSignaller() // get this *before* checking or you haz a race
 			msgs := conv21.GetMessages(0, -1)
 			for len(msgs) < 1 {
 				Printf("Snoozen\n")
 				<-ups
 				msgs = conv21.GetMessages(0, -1)
-				ups = conv21.AwaitUpdates()
+				ups = conv21.UpdateSignaller()
 			}
 			So(msgs[0].Body, ShouldResemble, msgBody)
 		})

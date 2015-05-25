@@ -66,7 +66,7 @@ func (conv *conversation) GetMessages(start, end int) []protocol.Message {
 	return conv.messages[start:end]
 }
 
-func (conv *conversation) AwaitUpdates() <-chan struct{} {
+func (conv *conversation) UpdateSignaller() <-chan struct{} {
 	awaiter := make(chan struct{})
 	conv.awaiters <- awaiter
 	return awaiter

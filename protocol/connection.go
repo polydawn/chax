@@ -20,5 +20,5 @@ type Conn interface {
 type Conversation interface {
 	Send(msg []byte) Message
 	GetMessages(start, end int) []Message // 1 is the beginning.  '-1' for end will get "the rest".
-	AwaitUpdates() <-chan struct{}        // Returned chan will be closed after new messages are logged.
+	UpdateSignaller() <-chan struct{}     // Returned chan will be closed after new messages are logged.
 }
