@@ -25,6 +25,8 @@ func (a *LinesAdapter) Append(lines ...string) {
 	a.DataChanged()
 }
 
+// BELOW LIETH FRAMEWORKIA
+
 func (a *LinesAdapter) Count() int {
 	return len(a.lines)
 }
