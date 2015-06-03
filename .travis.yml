@@ -10,7 +10,6 @@ install: true
 script:
   - ./goad init
   - ./goad install
-  - ./goad gxui-demo
   - ./goad test
 
 notifications:
