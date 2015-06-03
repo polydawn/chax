@@ -32,7 +32,7 @@ func appMain(driver gxui.Driver) {
 	ui := chaxui.New(theme)
 	window.AddChild(ui.BaseLayout)
 
-	go hello()
+	//go hello()
 }
 
 func hello() {
