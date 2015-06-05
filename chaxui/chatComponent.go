@@ -18,6 +18,7 @@ func NewDiscussionControl(theme gxui.Theme) gxui.Control {
 	// Where your text goes. Probably should wrap in another splitter for an
 	// enter button, but meh.
 	composeBox := theme.CreateTextBox()
+	composeBox.SetMultiline(true)
 	discussionContainer.AddChild(composeBox)
 
 	return discussionContainer
