@@ -28,6 +28,9 @@ func New(theme gxui.Theme) Ui {
 	ui.BaseLayout.AddChild(holder)
 	ui.BaseLayout.SetChildWeight(holder, 3)
 
+	accountConfig := NewConfigureAccountComponent(theme)
+	holder.AddPanel(accountConfig, "Configure Account")
+
 	discussionContainer := NewDiscussionControl(theme)
 	holder.AddPanel(discussionContainer, "Conversation")
 
