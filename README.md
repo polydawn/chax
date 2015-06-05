@@ -19,12 +19,13 @@ pics or it didn't happen
 Basic UI demos from the UI library for sanity testing can be built separately:
 
 ```bash
+sudo scripts/deps-install.sh # get GL headers
 ./goad init
 ./goad demo-gxui
 ./.gopath/bin/polygon
 ```
 
-Sorry, `init` has some apt-get installs for headers.
+Sorry, has some apt-get installs for headers.
 Don't worry; you *don't* need them to *run* the application once built.
 
 

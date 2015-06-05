@@ -52,9 +52,11 @@ else
 		# it's your responsibility to do this the first time
 		# (we don't do it at the front of every build because it will move submodules if you already have them, and that might not be what you want as you're plowing along)
 		git submodule update --init
+		# YOU MAY ALSO NEED TO DO THE FOLLOWING:
+		### scripts/deps-install.sh
 		# sorry: some dependencies that require root for package manager invocations.
 		# want these to go away, but that's an upstream issue.
-		scripts/deps-install.sh
+		# this is not included in the script because it requires sudo.
 		;;
 	test)
 		set +e ; shift ; shift ; set -e
