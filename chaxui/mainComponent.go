@@ -6,6 +6,7 @@ import (
 
 type Ui struct {
 	conversationListCtrl *LinesAdapter
+	DebugLogCtrl         *LinesAdapter
 	BaseLayout           gxui.SplitterLayout
 }
 
@@ -22,10 +23,17 @@ func New(theme gxui.Theme) Ui {
 	conversationList.SetAdapter(ui.conversationListCtrl)
 	ui.BaseLayout.AddChild(conversationList)
 
-	// RHS current conversation
+	// RHS current context
+	holder := theme.CreatePanelHolder()
+	ui.BaseLayout.AddChild(holder)
+	ui.BaseLayout.SetChildWeight(holder, 3)
+
 	discussionContainer := NewDiscussionControl(theme)
-	ui.BaseLayout.AddChild(discussionContainer)
-	ui.BaseLayout.SetChildWeight(discussionContainer, 3)
+	holder.AddPanel(discussionContainer, "Conversation")
+
+	debugLog, debugLogCtrl := NewDebugComponent(theme)
+	ui.DebugLogCtrl = debugLogCtrl
+	holder.AddPanel(debugLog, "#debug#")
 
 	return ui
 }

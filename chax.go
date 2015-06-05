@@ -32,6 +32,13 @@ func appMain(driver gxui.Driver) {
 	ui := chaxui.New(theme)
 	window.AddChild(ui.BaseLayout)
 
+	Log.SetHandler(log15.MultiHandler(
+		log15.StdoutHandler,
+		chaxui.ListDumpHandler(driver, ui.DebugLogCtrl, log15.LogfmtFormat()),
+	))
+
+	Log.Info("chax started")
+
 	//go hello()
 }
 
