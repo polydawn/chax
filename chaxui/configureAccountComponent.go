@@ -5,12 +5,10 @@ import (
 )
 
 func NewConfigureAccountComponent(theme gxui.Theme) gxui.Control {
-	centerer := theme.CreateLinearLayout()
-	centerer.AddChild(theme.CreateLabel()) // ... is there a better way to do placeholders and padding??
-	centerer.AddChild(theme.CreateLabel())
-
 	controlGroup := theme.CreateLinearLayout()
-	centerer.AddChildAt(1, controlGroup)
+	controlGroup.SetSizeMode(gxui.Fill)
+	controlGroup.SetHorizontalAlignment(gxui.AlignCenter)
+	controlGroup.SetVerticalAlignment(gxui.AlignMiddle) // y u no
 
 	var (
 		row     gxui.LinearLayout
@@ -38,5 +36,5 @@ func NewConfigureAccountComponent(theme gxui.Theme) gxui.Control {
 
 	// ofc what i really want, instantly, is tables.
 
-	return centerer
+	return controlGroup
 }
