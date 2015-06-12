@@ -4,11 +4,18 @@ import (
 	"github.com/google/gxui"
 )
 
+// Return the whole account configuration component swaddled in centering, etc.
+func NewConfigureAccountPage(theme gxui.Theme) gxui.Control {
+	divHCenter := theme.CreateLinearLayout()
+	divHCenter.SetSizeMode(gxui.Fill)
+	divHCenter.SetHorizontalAlignment(gxui.AlignCenter)
+	divHCenter.AddChild(NewConfigureAccountComponent(theme))
+	return divHCenter
+}
+
+// Just the account configuration component.
 func NewConfigureAccountComponent(theme gxui.Theme) gxui.Control {
-	controlGroup := theme.CreateLinearLayout()
-	controlGroup.SetSizeMode(gxui.Fill)
-	controlGroup.SetHorizontalAlignment(gxui.AlignCenter)
-	controlGroup.SetVerticalAlignment(gxui.AlignMiddle) // y u no
+	divRows := theme.CreateLinearLayout()
 
 	var (
 		row     gxui.LinearLayout
@@ -16,25 +23,25 @@ func NewConfigureAccountComponent(theme gxui.Theme) gxui.Control {
 		textbox gxui.TextBox
 	)
 
+	row = theme.CreateLinearLayout()
+	row.SetDirection(gxui.LeftToRight)
 	label = theme.CreateLabel()
 	label.SetText("username")
+	row.AddChild(label)
 	textbox = theme.CreateTextBox()
+	row.AddChild(textbox)
+	divRows.AddChild(row)
+
 	row = theme.CreateLinearLayout()
 	row.SetDirection(gxui.LeftToRight)
-	row.AddChild(label)
-	row.AddChild(textbox)
-	controlGroup.AddChild(row)
-
 	label = theme.CreateLabel()
 	label.SetText("domain")
-	textbox = theme.CreateTextBox()
-	row = theme.CreateLinearLayout()
-	row.SetDirection(gxui.LeftToRight)
 	row.AddChild(label)
+	textbox = theme.CreateTextBox()
 	row.AddChild(textbox)
-	controlGroup.AddChild(row)
+	divRows.AddChild(row)
 
 	// ofc what i really want, instantly, is tables.
 
-	return controlGroup
+	return divRows
 }
