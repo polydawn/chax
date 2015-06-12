@@ -36,5 +36,8 @@ func NewConfigureAccountComponent(theme gxui.Theme) gxui.Control {
 
 	// ofc what i really want, instantly, is tables.
 
+	table := NewTableComponent(theme)
+	controlGroup.AddChild(table)
+
 	return controlGroup
 }
