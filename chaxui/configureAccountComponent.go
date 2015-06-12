@@ -18,27 +18,31 @@ func NewConfigureAccountComponent(theme gxui.Theme) gxui.Control {
 	divRows := theme.CreateLinearLayout()
 
 	var (
-		row     gxui.LinearLayout
+		row     gxui.SplitterLayout
 		label   gxui.Label
 		textbox gxui.TextBox
 	)
 
-	row = theme.CreateLinearLayout()
-	row.SetDirection(gxui.LeftToRight)
+	row = theme.CreateSplitterLayout()
+	row.SetOrientation(gxui.Horizontal)
 	label = theme.CreateLabel()
 	label.SetText("username")
 	row.AddChild(label)
+	row.SetChildWeight(label, 1) // things i hate about this api: O(n) operation, not functional/fluent
 	textbox = theme.CreateTextBox()
 	row.AddChild(textbox)
+	row.SetChildWeight(textbox, 1)
 	divRows.AddChild(row)
 
-	row = theme.CreateLinearLayout()
-	row.SetDirection(gxui.LeftToRight)
+	row = theme.CreateSplitterLayout()
+	row.SetOrientation(gxui.Horizontal)
 	label = theme.CreateLabel()
 	label.SetText("domain")
 	row.AddChild(label)
+	row.SetChildWeight(label, 1)
 	textbox = theme.CreateTextBox()
 	row.AddChild(textbox)
+	row.SetChildWeight(textbox, 1)
 	divRows.AddChild(row)
 
 	// ofc what i really want, instantly, is tables.
